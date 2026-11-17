@@ -1,0 +1,34 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "description": "Pick the LEDDMX controller to add.",
+        "data": { "address": "Device" }
+      },
+      "bluetooth_confirm": {
+        "description": "Set up {name}?"
+      }
+    },
+    "abort": {
+      "already_configured": "This device is already configured.",
+      "no_devices_found": "No LEDDMX controllers are visible to a connectable Bluetooth adapter or proxy.",
+      "not_supported": "This device is not a LEDDMX controller."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": { "idle_timeout": "Disconnect after idle (seconds, 0 = stay connected)" },
+        "data_description": {
+          "idle_timeout": "Keeping the link open makes changes instant but blocks the phone app and uses a proxy connection slot."
+        }
+      }
+    }
+  },
+  "entity": {
+    "number": {
+      "effect_speed": { "name": "Effect speed" }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "domain": "leddmx",
+  "name": "LEDDMX BLE pixel controller",
+  "bluetooth": [
+    {
+      "connectable": true,
+      "local_name": "LEDDMX-*"
+    },
+    {
+      "connectable": true,
+      "service_uuid": "0000ffb0-0000-1000-8000-00805f9b34fb",
+      "manufacturer_id": 192
+    }
+  ],
+  "codeowners": ["@Majklzbastlirny"],
+  "config_flow": true,
+  "dependencies": ["bluetooth_adapters"],
+  "documentation": "https://github.com/Majklzbastlirny/ha-leddmx",
+  "issue_tracker": "https://github.com/Majklzbastlirny/ha-leddmx/issues",
+  "integration_type": "device",
+  "iot_class": "assumed_state",
+  "requirements": [],
+  "version": "0.1.0"
+}
