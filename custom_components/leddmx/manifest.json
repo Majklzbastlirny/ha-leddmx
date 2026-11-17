@@ -20,5 +20,5 @@
   "integration_type": "device",
   "iot_class": "assumed_state",
   "requirements": [],
-  "version": "0.1.0"
+  "version": "0.1.1"
 }

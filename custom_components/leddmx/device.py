@@ -26,7 +26,7 @@ from .protocol import CHAR_UUID
 
 _LOGGER = logging.getLogger(__name__)
 
-WRITE_GAP = 0.06  # seconds between frames; the app throttles to 30-50 ms
+WRITE_GAP = 0.05  # min seconds between frames (after the read barrier); app uses 30-50 ms
 DEFAULT_IDLE_TIMEOUT = 60.0
 
 _WRITE_ERRORS = (BleakError, asyncio.TimeoutError, EOFError, OSError)
@@ -104,6 +104,12 @@ class LedDmxDevice:
                 await asyncio.sleep(wait)
             _LOGGER.debug("%s <= %s", self._name, frame.hex(" "))
             await client.write_gatt_char(self._char, frame, response=False)
+            # Delivery barrier: the controller drops a frame when the next one arrives
+            # back-to-back (seen on the hardware; ESPHome proxies can squeeze our
+            # spacing together in transit). FFE1 has no write-with-response, but a
+            # GATT read is a request/response that is queued behind the write, so
+            # once it returns the frame has been delivered.
+            await client.read_gatt_char(self._char)
             self._last_write = time.monotonic()
 
     async def _ensure_connected(self) -> BleakClientWithServiceCache:

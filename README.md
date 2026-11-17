@@ -24,7 +24,9 @@ reflected. If the remote switched it off while HA still shows it on, a plain
 
 Quirks observed on the hardware, and handled by the integration:
 - a color frame resets brightness to 100 %, so brightness is re-sent after every color change (effect frames keep it);
-- power-on while already on restarts the running animation, so it's only sent when HA thinks the light is off.
+- power-on while already on restarts the running animation, so it's only sent when HA thinks the light is off;
+- a frame is dropped when the next one arrives back-to-back, which happens easily through a proxy. Each write is
+  followed by a GATT read of `FFE1`, a request/response that guarantees delivery before the next frame (~20–30 ms).
 
 Only the `LEDDMX-01` frame variant is implemented. That's what the app uses for names like
 `LEDDMX-000079` that don't match one of its typed prefixes. Names starting `LEDDMX-02-`, `-04-`, `-05-`

@@ -60,6 +60,8 @@ async def main() -> None:
     ap.add_argument("--addr", default=DEFAULT_ADDR)
     ap.add_argument("--handshake", action="store_true", help="send app's password/time frame first")
     ap.add_argument("--listen", type=float, default=1.0, help="seconds to wait for notifications at end")
+    ap.add_argument("--gap", type=float, default=GAP, help="seconds between frames")
+    ap.add_argument("--barrier", action="store_true", help="GATT read after each write (delivery barrier)")
     ap.add_argument("cmds", nargs="+")
     a = ap.parse_args()
     steps = [parse(c) for c in a.cmds]
@@ -87,7 +89,12 @@ async def main() -> None:
                 continue
             print(f"  -> {step.hex(' ')}  ({raw})")
             await c.write_gatt_char(p.CHAR_UUID, step, response=False)
-            await asyncio.sleep(GAP)
+            if a.barrier:
+                t = time.monotonic()
+                await c.read_gatt_char(p.CHAR_UUID)
+                print(f"     barrier {1000 * (time.monotonic() - t):.0f} ms")
+            if a.gap:
+                await asyncio.sleep(a.gap)
         await asyncio.sleep(a.listen)
 
 

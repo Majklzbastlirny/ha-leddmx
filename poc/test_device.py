@@ -47,6 +47,13 @@ async def main() -> None:
     await dev.send(p.brightness(60), p.color(0, 255, 0))
     print(f"### send after idle reconnect {time.monotonic() - t:.2f}s")
     await dev.send(p.effect(81), p.speed(70))
+    await asyncio.sleep(3)
+    # what HA sends for a preset-color click: color then brightness, must both land
+    t = time.monotonic()
+    for rgb in [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 0, 255)]:
+        await dev.send(p.color(*rgb), p.brightness(40))
+        await asyncio.sleep(1.5)
+    print(f"### 4 color+brightness pairs {time.monotonic() - t - 6:.2f}s of BLE time")
     await dev.disconnect()
     print("### done, connected =", dev.connected)
 
