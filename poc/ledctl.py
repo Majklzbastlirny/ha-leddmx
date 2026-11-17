@@ -24,7 +24,7 @@ GAP = 0.08  # seconds between writes (app throttles 30-50 ms)
 
 def parse(cmd: str) -> bytes | float:
     name, _, arg = cmd.partition(":")
-    args = [int(x, 0) for x in arg.split(",")] if arg and name != "raw" else []
+    args = [int(x, 0) for x in arg.split(",")] if arg and name not in ("raw", "wait") else []
     match name:
         case "on":
             return p.power(True)

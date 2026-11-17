@@ -10,7 +10,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from .const import CONF_IDLE_TIMEOUT, DEFAULT_IDLE_TIMEOUT
 from .device import LedDmxDevice
 
-PLATFORMS: list[Platform] = [Platform.LIGHT, Platform.NUMBER]
+PLATFORMS: list[Platform] = [Platform.LIGHT, Platform.NUMBER, Platform.SENSOR]
 
 type LedDmxConfigEntry = ConfigEntry[LedDmxDevice]
 

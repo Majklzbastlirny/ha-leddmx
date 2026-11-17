@@ -8,3 +8,6 @@ MODEL = "LEDDMX-01 pixel controller"
 
 CONF_IDLE_TIMEOUT = "idle_timeout"
 DEFAULT_IDLE_TIMEOUT = 60
+
+CONF_GAMMA = "gamma"
+DEFAULT_GAMMA = 1.0

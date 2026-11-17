@@ -16,14 +16,18 @@ written to over GATT, and it doesn't react to advertisements.
 |---|---|
 | `light.leddmx_xxxxxx` | on/off, RGB color, brightness, 210 built-in effects + "Auto cycle" (`off` effect = back to static color) |
 | `number.leddmx_xxxxxx_effect_speed` | animation speed 1–100 |
+| `sensor.leddmx_xxxxxx_signal_strength` | RSSI of the controller's advertisements (dBm), with the adapter/proxy that heard it as `source`; updated every ≤30 s (diagnostic) |
 
-The controller never reports its state, so entities are **assumed state**. HA shows
-what it last sent, and changes made with the IR/RF remote or the phone app aren't
-reflected. If the remote switched it off while HA still shows it on, a plain
-`light.turn_on` with no arguments re-sends power-on and brightness.
+The light and speed entities are **assumed state**: the controller never reports its
+state, so HA shows what it last sent, and changes made with the IR/RF remote or the
+phone app aren't reflected. If the remote switched it off while HA still shows it on,
+a plain `light.turn_on` with no arguments re-sends power-on and the current color or effect.
 
 Quirks observed on the hardware, and handled by the integration:
-- a color frame resets brightness to 100 %, so brightness is re-sent after every color change (effect frames keep it);
+- the controller's own brightness has only 32 steps and rounds small channels up, so at low brightness
+  `255,1,0` turns visibly yellow. A color frame also resets it to 100 %. For **static colors** the controller is
+  therefore left at 100 % and the integration scales the RGB itself (8-bit resolution, one frame per change).
+  **Effects** use the controller's brightness command, since the animation colors come from the controller;
 - power-on while already on restarts the running animation, so it's only sent when HA thinks the light is off;
 - a frame is dropped when the next one arrives back-to-back, which happens easily through a proxy. Each write is
   followed by a GATT read of `FFE1`, a request/response that guarantees delivery before the next frame (~20–30 ms).
@@ -38,6 +42,10 @@ A command opens a GATT connection, which stays open while more commands follow (
 drags are instant), then closes after **60 s idle** so the phone app can still connect.
 You can change the timeout under the integration's *Configure* menu (`0` = stay connected
 permanently; this uses one proxy connection slot).
+
+*Configure* also has **color gamma** (default `1.0` = off). WS2812 LEDs are linear, so mixed
+colors can look more washed out or yellowish than the HA color picker suggests. `2.2`–`2.8`
+(what WLED uses) corrects for that. It applies to static colors only.
 
 ## Install (HACS)
 

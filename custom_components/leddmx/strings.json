@@ -19,9 +19,13 @@
   "options": {
     "step": {
       "init": {
-        "data": { "idle_timeout": "Disconnect after idle (seconds, 0 = stay connected)" },
+        "data": {
+          "idle_timeout": "Disconnect after idle (seconds, 0 = stay connected)",
+          "gamma": "Color gamma correction (1.0 = off)"
+        },
         "data_description": {
-          "idle_timeout": "Keeping the link open makes changes instant but blocks the phone app and uses a proxy connection slot."
+          "idle_timeout": "Keeping the link open makes changes instant but blocks the phone app and uses a proxy connection slot.",
+          "gamma": "WS2812 LEDs are linear, so mixed colors look washed out compared to the color picker. 2.2-2.8 makes them closer to what you picked (orange looks orange instead of yellow). Applies to static colors only."
         }
       }
     }
@@ -29,6 +33,9 @@
   "entity": {
     "number": {
       "effect_speed": { "name": "Effect speed" }
+    },
+    "sensor": {
+      "rssi": { "name": "Signal strength" }
     }
   }
 }

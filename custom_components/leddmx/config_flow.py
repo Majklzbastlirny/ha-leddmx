@@ -18,7 +18,14 @@ from homeassistant.config_entries import (
 from homeassistant.const import CONF_ADDRESS
 from homeassistant.core import callback
 
-from .const import CONF_IDLE_TIMEOUT, DEFAULT_IDLE_TIMEOUT, DOMAIN, NAME_PREFIX
+from .const import (
+    CONF_GAMMA,
+    CONF_IDLE_TIMEOUT,
+    DEFAULT_GAMMA,
+    DEFAULT_IDLE_TIMEOUT,
+    DOMAIN,
+    NAME_PREFIX,
+)
 
 _ADV_UUID = "0000ffb0-0000-1000-8000-00805f9b34fb"
 
@@ -102,14 +109,17 @@ class LedDmxOptionsFlow(OptionsFlow):
     ) -> ConfigFlowResult:
         if user_input is not None:
             return self.async_create_entry(data=user_input)
-        current = self.config_entry.options.get(CONF_IDLE_TIMEOUT, DEFAULT_IDLE_TIMEOUT)
+        opts = self.config_entry.options
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_IDLE_TIMEOUT, default=current): vol.All(
-                        vol.Coerce(int), vol.Range(min=0, max=3600)
-                    )
+                    vol.Required(
+                        CONF_IDLE_TIMEOUT, default=opts.get(CONF_IDLE_TIMEOUT, DEFAULT_IDLE_TIMEOUT)
+                    ): vol.All(vol.Coerce(int), vol.Range(min=0, max=3600)),
+                    vol.Required(
+                        CONF_GAMMA, default=opts.get(CONF_GAMMA, DEFAULT_GAMMA)
+                    ): vol.All(vol.Coerce(float), vol.Range(min=1.0, max=3.0)),
                 }
             ),
         )
